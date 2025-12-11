@@ -1,0 +1,32 @@
+
+---
+
+## platform/tests/platform.spec.js
+
+```javascript
+// Minimal test to validate action registry + signed audit logs
+const assert = require("assert");
+const { createPlatform } = require("./guardian-platform");
+const manifest = require("./security-manifest.json");
+
+(async () => {
+  const platform = createPlatform({ manifest });
+
+  const r1 = await platform.execute("notify.prompt", { to: "parent-1", message: "Hello", actions: ["Yes","No"] });
+  assert(r1.ok, "notify.prompt failed");
+
+  const r2 = await platform.execute("lock.frontDoor", { lockId: "front-lock" });
+  assert(r2.ok, "lock.frontDoor failed");
+
+  const r3 = await platform.execute("appliance.shutOff", { applianceId: "oven", consentGranted: true });
+  assert(r3.ok, "appliance.shutOff with consent failed");
+
+  // Consent missing should fail
+  const r4 = await platform.execute("appliance.shutOff", { applianceId: "stove" });
+  assert(!r4.ok && r4.reason === "consent_missing", "appliance.shutOff should require consent");
+
+  const signed = platform.generateSignedReport();
+  assert(signed.signature && signed.publicKeyPem, "Signed report missing signature or public key");
+
+  console.log("Guardian Security Platform tests passed.");
+})();
