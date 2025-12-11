@@ -1,0 +1,25 @@
+{
+  "name": "Guardian Security Platform",
+  "version": "1.0.0",
+  "authors": [
+    {
+      "name": "Leif William Sogge",
+      "organization": "Space LEAF Corp",
+      "role": "Steward-Engineer"
+    }
+  ],
+  "lineageSafe": true,
+  "protocols": [
+    "departure_arm_check",
+    "lock_awareness",
+    "appliance_safety",
+    "family_arrival_eta",
+    "child_detour_consent",
+    "quiet_cabin_mode"
+  ],
+  "governance": {
+    "consentRequiredForChildDetours": true,
+    "arrivalDelayThresholdMinutes": 15,
+    "privacyLocalFirst": true
+  }
+}
